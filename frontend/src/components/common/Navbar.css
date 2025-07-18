@@ -1,0 +1,25 @@
+/* Navbar.css */
+.custom-dark-select .ant-select-selector {
+  background-color: #111 !important;
+  color: white !important;
+  border: 1px solid white !important;
+  border-radius: 6px;
+  height: 40px;
+}
+
+.custom-dark-select .ant-select-arrow {
+  color: white !important;
+}
+
+.custom-dark-dropdown {
+  background-color: #111 !important;
+  color: white !important;
+}
+
+.custom-dark-dropdown .ant-select-item-option-content {
+  color: white !important;
+}
+
+.custom-dark-dropdown .ant-select-item-option-active {
+  background-color: #222 !important;
+}
