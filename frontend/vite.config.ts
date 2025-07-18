@@ -7,6 +7,7 @@ import rollupNodePolyFill from "rollup-plugin-node-polyfills";
 // import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
 
 export default defineConfig({
+   base: "/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
