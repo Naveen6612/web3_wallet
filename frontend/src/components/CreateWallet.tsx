@@ -12,57 +12,59 @@ const CreateWalletPage = () => {
   const [agree, setAgree] = useState(false);
   const navigate = useNavigate();
 
-const handleCreateWallet = async () => {
-  if (password.length < 8) {
-    alert("Password must be at least 8 characters.");
-    return;
-  }
+  const handleCreateWallet = async () => {
+    if (password.length < 8) {
+      alert("Password must be at least 8 characters.");
+      return;
+    }
 
-  if (password !== confirmPassword) {
-    alert("Passwords do not match.");
-    return;
-  }
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
 
-  if (!agree) {
-    alert("You must agree to proceed.");
-    return;
-  }
+    if (!agree) {
+      alert("You must agree to proceed.");
+      return;
+    }
 
-  // ✅ Generate mnemonic
-  const wallet = ethers.Wallet.createRandom();
-  const mnemonic = wallet.mnemonic?.phrase;
+    // ✅ Generate mnemonic
+    const wallet = ethers.Wallet.createRandom();
+    const mnemonic = wallet.mnemonic?.phrase;
 
-  if (!mnemonic) {
-    alert("Failed to generate mnemonic.");
-    return;
-  }
+    if (!mnemonic) {
+      alert("Failed to generate mnemonic.");
+      return;
+    }
 
-  // ✅ Generate a UUID
-  const uuid = uuidv4();
+    // ✅ Generate a UUID
+    const uuid = uuidv4();
 
-  console.log("Sending to backend:", { uuid, mnemonic });
-  try {
-    // ✅ Send to backend: encryptedMnemonic + uuid
-    await axios.post("https://web3-wallet-mypy.onrender.com", {
-      uuid,
-      mnemonic,
-    });
-    console.log("Successfully sent");
+    console.log("Sending to backend:", { uuid, mnemonic });
+    try {
+      // ✅ Send to backend: encryptedMnemonic + uuid
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/register`,
+        {
+          uuid,
+          mnemonic,
+        }
+      );
+      console.log("Successfully sent");
 
-    // ✅ Store password, uuid, and mnemonic locally
-    localStorage.setItem("wallet_password", password);
-    localStorage.setItem("wallet_uuid", uuid);
-    localStorage.setItem("wallet_accounts", JSON.stringify([]));
-    localStorage.setItem("wallet_mnemonic", mnemonic); // ✅ This is the missing line
+      // ✅ Store password, uuid, and mnemonic locally
+      localStorage.setItem("wallet_password", password);
+      localStorage.setItem("wallet_uuid", uuid);
+      localStorage.setItem("wallet_accounts", JSON.stringify([]));
+      localStorage.setItem("wallet_mnemonic", mnemonic); // ✅ This is the missing line
 
-    // ✅ Navigate to next page
-    navigate("/generate-mnemonic");
-  } catch (err) {
-    console.error("Registration failed:", err);
-    alert("Something went wrong while creating your wallet.");
-  }
-};
-
+      // ✅ Navigate to next page
+      navigate("/generate-mnemonic");
+    } catch (err) {
+      console.error("Registration failed:", err);
+      alert("Something went wrong while creating your wallet.");
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d] px-4">

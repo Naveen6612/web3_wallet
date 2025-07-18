@@ -26,10 +26,13 @@ const ConnectWallet = () => {
       return;
     }
 
-    try {
-      const res = await axios.post("https://web3-wallet-mypy.onrender.com", {
+   try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/api/auth/connect`,
+      {
         mnemonic,
-      });
+      }
+    );
 
       const { uuid } = res.data;
       localStorage.setItem("wallet_uuid", uuid);
