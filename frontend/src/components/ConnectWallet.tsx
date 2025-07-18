@@ -27,7 +27,7 @@ const ConnectWallet = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/connect", {
+      const res = await axios.post("https://web3-wallet-mypy.onrender.com", {
         mnemonic,
       });
 
