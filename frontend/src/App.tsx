@@ -10,6 +10,7 @@ import Navbar from "./components/common/Navbar";
 import AccountPage from "./components/pages/AccountPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ConnectWallet from "./components/ConnectWallet";
+import SetPassword from "./components/SetPassword";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -40,6 +41,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/set-password" element={<SetPassword />} />
           <Route path="/account/:id" element={<AccountPage />} />
           <Route path="/connect-wallet" element={<ConnectWallet />} />
 
