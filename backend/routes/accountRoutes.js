@@ -3,6 +3,6 @@ import { saveAccount } from "../controllers/accountsController";
 const router = express.Router();
 
 
-router.post("/accounts", saveAccount)
+router.post("/", saveAccount)
 
 export default router;
