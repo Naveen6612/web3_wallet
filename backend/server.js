@@ -4,7 +4,7 @@ import cors from "cors";
 
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
-import accountRoutes from "./routes/accounts.js"
+import accountRoutes from "./routes/accountRoutes.js";
 const PORT = process.env.PORT || 5000;
 dotenv.config();
 
