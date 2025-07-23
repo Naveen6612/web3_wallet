@@ -1,5 +1,5 @@
 
-import AccountModel from "../models/AccountModel.js";
+import accountSchema from "../models/AccountModel.js";
 
 // controllers/accountController.js
 export const saveAccount = async (req, res) => {
@@ -10,7 +10,7 @@ export const saveAccount = async (req, res) => {
   }
 
   try {
-    await AccountModel.create({
+    await accountSchema.create({
       userId,
       address,
       index,
