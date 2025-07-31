@@ -1,121 +1,109 @@
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useEffect, useState } from "react";
-import { getBalance } from "@/utils/utilsWallet";
-import type { WalletAccount } from "@/types/wallet";
-import { fetchCryptoPrices } from "@/utils/fetchPrice";
-// import { useNavigate } from "react-router-dom";
+import { Connection } from "@solana/web3.js";
+import { Tabs } from "antd";
+import { Copy, Eye, EyeOff } from "lucide-react";
+import "./cssFolder/MainWallet.css";
 
+const connection = new Connection("https://api.devnet.solana.com");
 
-const MainWallet = () => {
-  const [accounts, setAccounts] = useState<WalletAccount[]>([]);
-  const [prices, setPrices] = useState<{ [key: string]: { usd: number } }>({});
-  // const [showMnemonic] = useState(false);
-  // const [mnemonic] = useState("");
-  // const navigate = useNavigate();
+export default function MainWallet() {
+  const { publicKey, connected } = useWallet();
+  const [balance, setBalance] = useState<number | null>(null);
+  const [showBalance, setShowBalance] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem("wallet_accounts");
-    if (stored) {
-      const parsed: WalletAccount[] = JSON.parse(stored);
-      Promise.all(
-        parsed.map(async (acc) => {
-          const balance = await getBalance(acc.address);
-          return { ...acc, balance };
-        })
-      ).then(setAccounts);
-    }
-    fetchCryptoPrices(["ethereum", "bitcoin", "dogecoin", "solana"]).then(
-      setPrices
+    const fetchBalance = async () => {
+      if (publicKey) {
+        const lamports = await connection.getBalance(publicKey);
+        setBalance(lamports / 1e9); // convert to SOL
+      }
+    };
+    fetchBalance();
+  }, [publicKey]);
+
+  if (!connected) {
+    return (
+      <div className="min-h-screen bg-black text-white flex flex-col justify-center items-center px-6 py-6">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-center">
+          Connect to your wallet first
+        </h1>
+        <p className="text-gray-400 text-center mb-6 max-w-md">
+          To view your account details, tokens, NFTs, and DeFi info, please connect your browser wallet using the Connect Wallet in the Right Top corner.
+        </p>
+        <div className="w-12 h-12 border-4 border-dashed border-purple-500 rounded-full animate-spin"></div>
+      </div>
     );
-  }, []);
-
-    const handleDeleteAccount = (index: number) => {
-    const updated = accounts.filter((_, i) => i !== index);
-    setAccounts(updated);
-    localStorage.setItem("wallet_accounts", JSON.stringify(updated));
-  };
-
-
-
-  // const handleRevealMnemonic = () => {
-  //   const saved = localStorage.getItem("wallet_mnemonic");
-  //   if (!saved) return alert("No mnemonic found.");
-  //   const confirmReveal = window.confirm(
-  //     "Are you sure you want to reveal your secret recovery phrase? Never share this with anyone."
-  //   );
-  //   if (confirmReveal) {
-  //     navigate("/generate-mnemonic");
-  //   }
-  // };
+  }
 
   return (
-    <div className="flex h-screen text-white">
-
-      <div
-        className={`transition-all duration-300 px-6 py-8 bg-[#0d1117] min-h-screen text-white `}
-      >
-
-
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Ethereum Wallet</h1>
-          {accounts.length > 0 && (
-            <div className="text-green-400 font-semibold">
-              Total Balance:{" "}
-              {accounts
-                .reduce((acc, a) => acc + parseFloat(a.balance), 0)
-                .toFixed(4)}{" "}
-              ETH
-            </div>
-          )}
-        </div>
-
-        {accounts.length === 0 ? (
-          <p className="text-gray-400">No accounts yet.</p>
-        ) : (
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-            {accounts.map((acc, idx) => (
-              <div
-                key={idx}
-                className="border border-gray-700 rounded-md p-4 bg-[#161b22]"
-              >
-                <div className="flex justify-between items-center mb-2">
-                  <p className="text-sm text-gray-400">Account {idx + 1}</p>
-                  <button
-                    onClick={() => handleDeleteAccount(idx)}
-                    className="text-red-500 text-sm hover:underline"
-                  >
-                    Delete
-                  </button>
-                </div>
-                <p className="break-all text-lg">Address: {acc.address}</p>
-                <p className="break-all text-sm text-gray-400">
-                  Private Key: {acc.privateKey}
-                </p>
-                <p className="break-all text-sm text-gray-400">
-                  Mnemonic: {acc.mnemonic}
-                </p>
-                <p className="text-green-400 mt-2 font-semibold">
-                  Balance: {acc.balance} ETH
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Footer: Live Prices */}
-        <div className="mt-10 p-4 bg-[#1e2638] rounded-md">
-          <h3 className="text-lg font-semibold mb-2">Live Coin Prices (USD)</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-            {Object.entries(prices).map(([key, val]) => (
-              <div key={key} className="text-gray-300">
-                <strong className="text-white uppercase">{key}</strong>: $
-                {val.usd.toFixed(2)}
-              </div>
-            ))}
-          </div>
+    <div className="min-h-screen bg-black text-white px-6 py-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <div className="flex items-center gap-4">
+          {/* Removed WalletMultiButton */}
+          <button className="bg-white text-black rounded-full w-8 h-8 text-sm">4</button>
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-purple-600" />
         </div>
       </div>
+
+      {/* Account Summary */}
+      <div className="bg-[#111] p-6 rounded-xl shadow-lg mb-8">
+        <h2 className="text-lg font-semibold mb-2">Decentralized accounts</h2>
+        <div className="flex items-center gap-4">
+          <span className="text-3xl font-bold">
+            {showBalance ? `$${balance?.toFixed(2) || "0.00"}` : "••••"}
+          </span>
+          <button onClick={() => setShowBalance(!showBalance)} title="Toggle Balance">
+            {showBalance ? <Eye size={20} /> : <EyeOff size={20} />}
+          </button>
+        </div>
+        <p className="text-red-400 text-sm mt-1">$0.00 (0.00%)</p>
+
+        {/* Address Dropdowns */}
+        {publicKey && (
+          <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="bg-[#222] px-4 py-2 rounded-md flex items-center justify-between w-full sm:w-1/2">
+              <span className="truncate">{publicKey.toBase58()}</span>
+              <button
+                onClick={() => navigator.clipboard.writeText(publicKey.toBase58())}
+                title="Copy address"
+              >
+                <Copy size={16} />
+              </button>
+            </div>
+
+            <div className="bg-[#222] px-4 py-2 rounded-md text-sm">
+              7 Networks ▼ {/* Replace with actual dropdown later */}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Tabs */}
+      <Tabs
+        defaultActiveKey="tokens"
+        className="custom-dark-tabs"
+        items={[
+          { key: "tokens", label: "Tokens", children: <div>No tokens yet.</div> },
+          { key: "nfts", label: "NFTs", children: <div>No NFTs.</div> },
+          { key: "defi", label: "DeFi", children: <div>Coming soon.</div> },
+          {
+            key: "spending",
+            label: "Spending Caps",
+            children: (
+              <div className="text-center py-12">
+                <div className="text-gray-300 mb-2">
+                  A spending cap is a set permission allowing a smart contract to use a limited amount of your tokens.
+                </div>
+                <p className="text-gray-400">No spending caps found for selected accounts.</p>
+              </div>
+            ),
+          },
+        ]}
+      />
+
+      
     </div>
   );
-};
-
-export default MainWallet;
+}

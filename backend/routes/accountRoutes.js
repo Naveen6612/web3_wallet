@@ -1,8 +1,8 @@
-import express from "express";
-import { saveAccount } from "../controllers/accountsController";
-const router = express.Router();
+// import express from "express";
+// import { saveAccount } from "../controllers/accountsController";
+// const router = express.Router();
 
 
-router.post("/", saveAccount)
+// router.post("/", saveAccount)
 
-export default router;
+// export default router;

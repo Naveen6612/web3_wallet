@@ -4,7 +4,7 @@ import cors from "cors";
 
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
-import accountRoutes from "./routes/accountRoutes.js";
+// import accountRoutes from "./routes/accountRoutes.js";
 const PORT = process.env.PORT || 5000;
 dotenv.config();
 
@@ -20,7 +20,7 @@ import healthRouter from "./routes/healthCheck.js"
 app.use("/health-check", healthRouter  )
 
 app.use("/api/auth", authRoutes );
-app.use("/api/account/", accountRoutes);
+// app.use("/api/account/", accountRoutes);
 
 
 mongoose

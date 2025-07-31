@@ -1,0 +1,14 @@
+/* MainWallet.css */
+.custom-dark-tabs .ant-tabs-nav {
+  border-bottom: 1px solid #333;
+}
+.custom-dark-tabs .ant-tabs-tab {
+  color: #ccc;
+}
+.custom-dark-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: white;
+  font-weight: bold;
+}
+.custom-dark-tabs .ant-tabs-ink-bar {
+  background: #6366f1;
+}

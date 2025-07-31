@@ -8,11 +8,12 @@ import rollupNodePolyFill from "rollup-plugin-node-polyfills";
 
 export default defineConfig({
    base: "/",
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), ],
   resolve: {
     alias: {
-      buffer: "buffer", // 🔧 required for Buffer
-      process: "process/browser",
+       process: path.resolve(__dirname, "node_modules/process/browser.js"), // ✅ Correct absolute path
+      buffer: path.resolve(__dirname, "node_modules/buffer/"),              // ✅ Correct absolute path
+      stream: path.resolve(__dirname, "node_modules/stream-browserify"),   // ✅ Correct absolute path
       "@/": `${path.resolve(__dirname, "src")}/`,
     },
   },
@@ -20,7 +21,7 @@ export default defineConfig({
     global: "globalThis", // 👈 critical
   },
   optimizeDeps: {
-    include: ["buffer", "process"],
+    include: ["buffer", "process", "stream"],
   },
   build: {
     rollupOptions: {

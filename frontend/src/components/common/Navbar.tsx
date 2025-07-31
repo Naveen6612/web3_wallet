@@ -1,26 +1,29 @@
 import { useState, useEffect, useRef } from "react";
 import { Bell, Search, Wallet } from "lucide-react";
-import { Select, type SelectProps } from "antd";
+// import { Select, type SelectProps } from "antd";
 import { useNavigate } from "react-router-dom";
-import "./Navbar.css";
+import "../cssFolder/Navbar.css";
 import AddAccountButton from "./Button";
 import type { WalletAccount } from "@/types/wallet";
 import { deriveAccount } from "@/utils/hdWallets";
 import { getBalance } from "@/utils/utilsWallet";
 import LogoutButton from "./LogoutButton";
+// import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
-const chainOptions: SelectProps["options"] = [
-  { label: "Ethereum", value: "0x1" },
-  { label: "Polygon", value: "0x89" },
-  { label: "BSC", value: "0x38" },
-  { label: "Arbitrum", value: "0xa4b1" },
-];
+// const chainOptions: SelectProps["options"] = [
+//   { label: "Ethereum", value: "0x1" },
+//   { label: "Polygon", value: "0x89" },
+//   { label: "BSC", value: "0x38" },
+//   { label: "Arbitrum", value: "0xa4b1" },
+// ];
 
 const Navbar = () => {
-  const [selectedChain, setSelectedChain] = useState("0x1");
+  // const [selectedChain, setSelectedChain] = useState("0x1");
   const [accounts, setAccounts] = useState<WalletAccount[]>([]);
   const [showAccounts, setShowAccounts] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  // const wallet = useWallet();
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -93,13 +96,13 @@ const Navbar = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <Select
+            {/* <Select
               className="custom-dark-select min-w-[150px] h-10"
               popupClassName="custom-dark-dropdown"
               value={selectedChain}
               onChange={(val) => setSelectedChain(val)}
               options={chainOptions}
-            />
+            /> */}
             {["Swap", "Send"].map((label) => (
               <button
                 key={label}
@@ -193,9 +196,13 @@ const Navbar = () => {
           </div>
 
           {/* Connect Wallet */}
-          <button className="bg-black text-white px-4 py-2 rounded-md text-sm md:text-base hover:bg-blue-900">
+          <WalletMultiButton className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md text-sm" />
+
+          {/* <button 
+          
+          className="bg-black text-white px-4 py-2 rounded-md text-sm md:text-base hover:bg-blue-900">
             Connect wallet
-          </button>
+          </button> */}
           {/* logout button */}
           <LogoutButton/>
         </div>
